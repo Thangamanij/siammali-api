@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.siammali.domain.Contact;
 import com.siammali.domain.Country;
 import com.siammali.exception.BadResourceException;
 import com.siammali.exception.ResourceAlreadyExistsException;
@@ -24,6 +26,9 @@ public class CountryService {
 
 	public Country save(Country country) throws BadResourceException, ResourceAlreadyExistsException {
 		if (country != null) {
+			if (country.getId() != null && existsById(country.getId())) {
+				throw new ResourceAlreadyExistsException("Country with id: " + country.getId() + " already exists");
+			}
 			return countryRepo.save(country);
 		} else {
 			BadResourceException exc = new BadResourceException("Failed to save Country");
@@ -32,12 +37,12 @@ public class CountryService {
 		}
 	}
 
-	public void update(Country country) throws BadResourceException, ResourceNotFoundException {
+	public Country update(Country country) throws BadResourceException, ResourceNotFoundException {
 		if (country != null) {
 			if (!existsById(country.getId())) {
 				throw new ResourceNotFoundException("Cannot find Country with id: " + country.getId());
 			}
-			countryRepo.save(country);
+			return countryRepo.save(country);
 		} else {
 			BadResourceException exc = new BadResourceException("Failed to save country");
 			exc.addErrorMessage("Country is null or empty");
@@ -57,5 +62,17 @@ public class CountryService {
 		List<Country> countries = new ArrayList<>();
 		countryRepo.findAll().forEach(countries::add);
 		return countries;
+	}
+
+	public Country findByCode(String code) {
+		return countryRepo.findByCode(code).orElse(null);
+	}
+
+	public Country findById(Long id) throws ResourceNotFoundException {
+		Country country = countryRepo.findById(id).orElse(null);
+		if (country == null) {
+			throw new ResourceNotFoundException("Cannot find Country with id: " + id);
+		} else
+			return country;
 	}
 }

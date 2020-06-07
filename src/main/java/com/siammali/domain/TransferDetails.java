@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Role implements Serializable {
+public class TransferDetails implements Serializable {
 
 	/**
 	 * 
@@ -21,8 +21,11 @@ public class Role implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String transferMode;
+	private String bankName;
+	private String accountName;
+	private Long accountNumber;
+	private String ifsc;
+	private String placeOfCollect;
 
-	private String code;
-	private String label;
-	
 }
