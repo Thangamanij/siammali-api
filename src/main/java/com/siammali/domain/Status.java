@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Role implements Serializable {
+public class Status implements Serializable {
 
 	/**
 	 * 

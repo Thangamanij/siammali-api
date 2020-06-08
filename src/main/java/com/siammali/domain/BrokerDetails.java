@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Role implements Serializable {
+public class BrokerDetails implements Serializable {
 
 	/**
 	 * 
@@ -22,7 +22,11 @@ public class Role implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String code;
-	private String label;
-	
+	private String name;
+	private String bank;
+	private String accountName;
+	private Long accountNumber;
+	private String branch;
+	private String ifsc;
+
 }

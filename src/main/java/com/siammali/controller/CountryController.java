@@ -33,7 +33,6 @@ public class CountryController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
 	@Autowired
 	private CountryService countryService;
 
@@ -41,7 +40,7 @@ public class CountryController {
 	public ResponseEntity<Country> addCountry(@Valid @RequestBody Country country) throws URISyntaxException {
 		try {
 			Country newCountry = countryService.save(country);
-			return ResponseEntity.created(new URI("/api/countries/" + newCountry.getId())).body(country);
+			return ResponseEntity.ok(newCountry);
 		} catch (ResourceAlreadyExistsException ex) {
 			// log exception first, then return Conflict (409)
 			logger.error(ex.getMessage());
@@ -53,12 +52,11 @@ public class CountryController {
 		}
 	}
 
-	@PutMapping(value = "/countries/{id}")
-	public ResponseEntity<Country> updateContact(@Valid @RequestBody Country country, @PathVariable long id) {
+	@PutMapping(value = "/countries/{countryId}")
+	public ResponseEntity<Country> updateContact(@Valid @RequestBody Country country, @PathVariable Long countryId) {
 		try {
-			country.setId(id);
-			countryService.update(country);
-			return ResponseEntity.ok().build();
+			country.setId(countryId);
+			return ResponseEntity.ok(countryService.update(country));
 		} catch (ResourceNotFoundException ex) {
 			// log exception first, then return Not Found (404)
 			logger.error(ex.getMessage());
@@ -70,10 +68,10 @@ public class CountryController {
 		}
 	}
 
-	@DeleteMapping(path = "/countries/{id}")
-	public ResponseEntity<Void> deleteCountryById(@PathVariable long id) {
+	@DeleteMapping(path = "/countries/{countryId}")
+	public ResponseEntity<Void> deleteCountryById(@PathVariable Long countryId) {
 		try {
-			countryService.deleteById(id);
+			countryService.deleteById(countryId);
 			return ResponseEntity.ok().build();
 		} catch (ResourceNotFoundException ex) {
 			logger.error(ex.getMessage());
@@ -86,4 +84,15 @@ public class CountryController {
 		return ResponseEntity.ok(countryService.findAll());
 
 	}
+
+	@GetMapping(value = "/countries/{countryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Country> findCountryById(@PathVariable Long countryId) {
+		try {
+			Country country = countryService.findById(countryId);
+			return ResponseEntity.ok(country); // return 200, with json body
+		} catch (ResourceNotFoundException ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+	}
+
 }

@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Role implements Serializable {
+public class DocumentType implements Serializable {
 
 	/**
 	 * 
@@ -24,5 +24,5 @@ public class Role implements Serializable {
 
 	private String code;
 	private String label;
-	
+
 }

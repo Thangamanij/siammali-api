@@ -24,7 +24,7 @@ public class SwaggerConfig {
 	}
 
 	private Predicate<String> postPaths() {
-		return or(regex("/api.*"), regex("/api.*"));
+		return or(regex("/api.*"), regex("/token.*"));
 	}
 
 	@SuppressWarnings("deprecation")
